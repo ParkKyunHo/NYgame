@@ -11,12 +11,14 @@ export const colors = {
     dark: '#4A6B35',
   },
   pixel: {
-    brown: '#4A3728',     // 다크 브라운 (테두리)
-    darkBrown: '#3D2E22', // 더 어두운 브라운
-    cream: '#FFF8DC',     // 크림색 (배경)
-    gold: '#D4A84B',      // 골드
-    orange: '#C87941',    // 오렌지 브라운
-    shadow: '#2A1F16',    // 그림자
+    brown: '#5D4037',     // 다크 브라운 (테두리) - 더 따뜻한 갈색
+    darkBrown: '#3E2723', // 더 어두운 브라운 (그림자/텍스트)
+    cream: '#FFF8E1',     // 크림색 (배경) - 더 밝고 따뜻한 느낌
+    gold: '#FFECB3',      // 밝은 골드 (배경 강조)
+    orange: '#FF7043',    // 오렌지 (포인트)
+    shadow: '#261612',    // 진한 그림자
+    beige: '#F5F5DC',     // 베이지
+    lightBeige: '#FFFDE7', // 밝은 베이지
   },
   grade: {
     first: '#FFD700',     // 금색
@@ -27,15 +29,15 @@ export const colors = {
   background: 'transparent', // 배경 비디오 보이게
   surface: 'rgba(255, 248, 220, 0.95)', // 반투명 크림
   text: {
-    primary: '#3D2E22',   // 다크 브라운
-    secondary: '#6B5B4F', // 중간 브라운
-    disabled: '#A99B8D',  // 연한 브라운
-    light: '#FFF8DC',     // 밝은 텍스트
+    primary: '#3E2723',   // 다크 브라운
+    secondary: '#5D4037', // 중간 브라운
+    disabled: '#A1887F',  // 연한 브라운
+    light: '#FFF8E1',     // 밝은 텍스트
   },
   status: {
     success: '#6B8E4E',
-    warning: '#C87941',
-    error: '#8B4513',
+    warning: '#FF7043',
+    error: '#D32F2F',
     info: '#4A6B35',
   }
 };

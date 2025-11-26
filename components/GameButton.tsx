@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ViewStyle, View } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, ViewStyle, View, Platform } from 'react-native';
 import { colors } from '../constants/colors';
 import { useResponsive } from '../hooks/useResponsive';
 
@@ -28,10 +28,13 @@ export const GameButton: React.FC<GameButtonProps> = ({
             disabled={disabled}
             style={[styles.wrapper, style]}
         >
+            {/* 그림자 */}
+            <View style={[styles.shadow, { top: s(4), left: s(4), borderRadius: 0 }]} />
+
             {/* 픽셀 스타일 외곽 테두리 */}
             <View style={[
                 styles.outerBorder,
-                { padding: s(4), borderRadius: s(2) },
+                { padding: s(4), borderRadius: 0 },
                 isPrimary ? styles.outerPrimary : styles.outerSecondary,
                 disabled && styles.outerDisabled
             ]}>
@@ -39,9 +42,9 @@ export const GameButton: React.FC<GameButtonProps> = ({
                 <View style={[
                     styles.innerButton,
                     {
-                        paddingVertical: s(14),
+                        paddingVertical: s(16),
                         paddingHorizontal: s(32),
-                        borderWidth: s(3),
+                        borderWidth: s(4),
                     },
                     isPrimary ? styles.innerPrimary : styles.innerSecondary,
                     disabled && styles.innerDisabled
@@ -50,7 +53,7 @@ export const GameButton: React.FC<GameButtonProps> = ({
                     <View style={styles.highlight} />
                     <Text style={[
                         styles.buttonText,
-                        { fontSize: fs(18), letterSpacing: s(1) },
+                        { fontSize: fs(24), letterSpacing: s(2), fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace' },
                         isPrimary ? styles.textPrimary : styles.textSecondary,
                         disabled && styles.textDisabled
                     ]}>
@@ -65,11 +68,19 @@ export const GameButton: React.FC<GameButtonProps> = ({
 const styles = StyleSheet.create({
     wrapper: {
         alignItems: 'center',
+        position: 'relative',
+    },
+    shadow: {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        backgroundColor: colors.pixel.shadow,
     },
     outerBorder: {
+        width: '100%',
     },
     outerPrimary: {
-        backgroundColor: colors.pixel.darkBrown,
+        backgroundColor: colors.pixel.brown,
     },
     outerSecondary: {
         backgroundColor: colors.pixel.brown,
@@ -80,10 +91,11 @@ const styles = StyleSheet.create({
     innerButton: {
         position: 'relative',
         overflow: 'hidden',
+        alignItems: 'center',
     },
     innerPrimary: {
-        backgroundColor: colors.pixel.gold,
-        borderColor: colors.pixel.orange,
+        backgroundColor: '#D4A84B', // 골드
+        borderColor: '#C87941', // 오렌지 브라운
     },
     innerSecondary: {
         backgroundColor: colors.pixel.cream,
@@ -98,17 +110,17 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         right: 0,
-        height: '40%',
-        backgroundColor: 'rgba(255, 255, 255, 0.3)',
+        height: '30%',
+        backgroundColor: 'rgba(255, 255, 255, 0.4)',
     },
     buttonText: {
-        fontWeight: 'bold',
+        fontWeight: '900',
         textAlign: 'center',
     },
     textPrimary: {
         color: colors.pixel.darkBrown,
-        textShadowColor: 'rgba(255, 255, 255, 0.5)',
-        textShadowOffset: { width: 1, height: 1 },
+        textShadowColor: 'rgba(255, 255, 255, 0.4)',
+        textShadowOffset: { width: 2, height: 2 },
         textShadowRadius: 0,
     },
     textSecondary: {

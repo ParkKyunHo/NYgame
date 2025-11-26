@@ -7,23 +7,31 @@ import { useGameStore } from '../../store/gameStore';
 import { useResponsive } from '../../hooks/useResponsive';
 
 // 픽셀 박스 컴포넌트 (도트 스타일 테두리) - 이미지 참고
+// 픽셀 박스 컴포넌트 (도트 스타일 테두리 + 그림자)
 const PixelBox: React.FC<{
     children: React.ReactNode;
     style?: any;
-    variant?: 'default' | 'dark' | 'transparent';
+    variant?: 'default' | 'dark' | 'transparent' | 'gold';
     scale?: number;
 }> = ({ children, style, variant = 'default', scale = 1 }) => {
     const outerStyle = variant === 'dark' ? styles.boxOuterDark :
-                       variant === 'transparent' ? styles.boxOuterTransparent :
-                       styles.boxOuter;
+        variant === 'transparent' ? styles.boxOuterTransparent :
+            variant === 'gold' ? styles.boxOuterGold :
+                styles.boxOuter;
+
     const innerStyle = variant === 'dark' ? styles.boxInnerDark :
-                       variant === 'transparent' ? styles.boxInnerTransparent :
-                       styles.boxInner;
+        variant === 'transparent' ? styles.boxInnerTransparent :
+            variant === 'gold' ? styles.boxInnerGold :
+                styles.boxInner;
+
+    const borderWidth = Math.round(4 * scale);
 
     return (
-        <View style={[outerStyle, { padding: Math.round(4 * scale) }, style]}>
-            <View style={[innerStyle, { padding: Math.round(16 * scale), borderWidth: Math.round(3 * scale) }]}>
-                {children}
+        <View style={[styles.pixelShadow, { top: borderWidth, left: borderWidth }, style]}>
+            <View style={[outerStyle, { padding: borderWidth }, style, { top: 0, left: 0, marginBottom: borderWidth, marginRight: borderWidth }]}>
+                <View style={[innerStyle, { padding: Math.round(16 * scale), borderWidth: borderWidth }]}>
+                    {children}
+                </View>
             </View>
         </View>
     );
@@ -47,36 +55,38 @@ export function HomeScreen() {
                 showsVerticalScrollIndicator={false}
             >
                 {/* 타이틀 - 이미지처럼 크고 굵은 텍스트 */}
-                <View style={[styles.titleContainer, { marginBottom: s(20) }]}>
+                <View style={[styles.titleContainer, { marginBottom: s(30) }]}>
                     <Text style={[
                         styles.titleMain,
                         {
-                            fontSize: fs(48),
-                            textShadowOffset: { width: s(3), height: s(3) },
-                            letterSpacing: s(4),
+                            fontSize: fs(52),
+                            textShadowOffset: { width: s(4), height: s(4) },
+                            letterSpacing: s(2),
+                            fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
                         }
                     ]}>베이글</Text>
                     <Text style={[
                         styles.titleSub,
                         {
-                            fontSize: fs(48),
-                            textShadowOffset: { width: s(3), height: s(3) },
-                            letterSpacing: s(4),
+                            fontSize: fs(52),
+                            textShadowOffset: { width: s(4), height: s(4) },
+                            letterSpacing: s(2),
+                            fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
                         }
                     ]}>럭키 뽑기</Text>
                 </View>
 
                 {/* 캐릭터 이미지 영역 - 흰색 배경 + 도넛 이미지 */}
-                <PixelBox style={[styles.characterBox, { width: s(160), marginBottom: s(16) }]} variant="default" scale={scale}>
-                    <View style={[styles.characterInner, { paddingVertical: s(20) }]}>
-                        <Text style={[styles.characterEmoji, { fontSize: fs(80) }]}>🍩</Text>
+                <PixelBox style={[styles.characterBox, { width: s(180), marginBottom: s(24) }]} variant="default" scale={scale}>
+                    <View style={[styles.characterInner, { paddingVertical: s(10) }]}>
+                        <Text style={[styles.characterEmoji, { fontSize: fs(90) }]}>🍩</Text>
                     </View>
                 </PixelBox>
 
                 {/* 안내 문구 박스 */}
-                <PixelBox style={[styles.infoBox, { marginBottom: s(20), minWidth: s(200) }]} variant="default" scale={scale}>
-                    <Text style={[styles.infoText, { fontSize: fs(16) }]}>만원 이상 구매 시</Text>
-                    <Text style={[styles.infoHighlight, { fontSize: fs(22), marginTop: s(4) }]}>1회 참여 가능!</Text>
+                <PixelBox style={[styles.infoBox, { marginBottom: s(24), minWidth: s(240) }]} variant="gold" scale={scale}>
+                    <Text style={[styles.infoText, { fontSize: fs(18), fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace' }]}>만원 이상 구매 시</Text>
+                    <Text style={[styles.infoHighlight, { fontSize: fs(24), marginTop: s(8), fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace' }]}>1회 참여 가능!</Text>
                 </PixelBox>
 
                 {/* 시작 버튼 */}
@@ -144,16 +154,23 @@ export function HomeScreen() {
 
 const styles = StyleSheet.create({
     // 픽셀 박스 스타일
+    pixelShadow: {
+        backgroundColor: colors.pixel.shadow,
+    },
     boxOuter: {
-        backgroundColor: colors.pixel.darkBrown,
+        backgroundColor: colors.pixel.brown,
         borderRadius: 0,
     },
     boxOuterDark: {
-        backgroundColor: colors.pixel.shadow,
+        backgroundColor: colors.pixel.darkBrown,
         borderRadius: 0,
     },
     boxOuterTransparent: {
         backgroundColor: 'transparent',
+        borderRadius: 0,
+    },
+    boxOuterGold: {
+        backgroundColor: colors.pixel.brown,
         borderRadius: 0,
     },
     boxInner: {
@@ -166,6 +183,10 @@ const styles = StyleSheet.create({
     },
     boxInnerTransparent: {
         backgroundColor: 'rgba(255, 248, 220, 0.9)',
+        borderColor: colors.pixel.brown,
+    },
+    boxInnerGold: {
+        backgroundColor: colors.pixel.lightBeige,
         borderColor: colors.pixel.brown,
     },
     scrollContent: {
