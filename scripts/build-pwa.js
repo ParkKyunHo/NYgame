@@ -39,7 +39,7 @@ if (fs.existsSync(indexPath)) {
       '</head>',
       `<link rel="manifest" href="/manifest.json" />
 <link rel="apple-touch-icon" href="/assets/icon.png" />
-<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="베이글뽑기">
 </head>`
