@@ -7,6 +7,26 @@ const assetsDir = path.join(__dirname, '..', 'assets');
 
 console.log('🔧 PWA 빌드 후처리 시작...\n');
 
+// 0. JS 번들에서 import.meta.env 변환 (Zustand devtools 호환성)
+const jsDir = path.join(distDir, '_expo', 'static', 'js', 'web');
+if (fs.existsSync(jsDir)) {
+  const jsFiles = fs.readdirSync(jsDir).filter(f => f.endsWith('.js'));
+  jsFiles.forEach(file => {
+    const filePath = path.join(jsDir, file);
+    let content = fs.readFileSync(filePath, 'utf8');
+
+    // import.meta.env를 안전한 객체로 변환
+    if (content.includes('import.meta')) {
+      content = content.replace(/import\.meta\.env\?import\.meta\.env\.MODE:void 0/g, '"production"');
+      content = content.replace(/import\.meta\.env\?import\.meta\.env\.MODE/g, '"production"');
+      content = content.replace(/import\.meta\.env/g, '({MODE:"production",NODE_ENV:"production"})');
+      content = content.replace(/import\.meta/g, '({env:{MODE:"production",NODE_ENV:"production"}})');
+      fs.writeFileSync(filePath, content);
+      console.log(`✅ ${file} import.meta 변환 완료`);
+    }
+  });
+}
+
 // 1. public 폴더의 파일들을 dist로 복사
 const publicFiles = ['manifest.json', 'sw.js'];
 publicFiles.forEach(file => {
