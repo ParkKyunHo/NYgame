@@ -46,21 +46,33 @@ export default function Layout() {
 
             globalVideoElement = video;
 
-            // 재생 시도 함수
-            const tryPlay = () => {
-                if (globalVideoElement) {
+            // 재생 시도 함수 (초기 자동 재생용 - muted 필요)
+            const tryAutoPlay = () => {
+                if (globalVideoElement && globalVideoElement.paused) {
                     globalVideoElement.muted = true; // muted 상태에서만 자동재생 가능
                     globalVideoElement.play().catch(() => {});
                 }
             };
 
             // 즉시 재생 시도
-            tryPlay();
+            tryAutoPlay();
 
-            // 실패 시 클릭/터치로 재생
-            const playOnInteraction = () => tryPlay();
-            document.addEventListener('click', playOnInteraction, { once: true });
-            document.addEventListener('touchstart', playOnInteraction, { once: true });
+            // 사용자 인터랙션 시 재생 (비디오가 멈춰있을 때만)
+            const playOnInteraction = (e: Event) => {
+                if (globalVideoElement && globalVideoElement.paused) {
+                    globalVideoElement.play().catch(() => {});
+                }
+            };
+
+            // 이벤트 리스너 - 비디오가 재생 중이면 아무것도 하지 않음
+            document.addEventListener('click', playOnInteraction);
+            document.addEventListener('touchstart', playOnInteraction);
+
+            // Cleanup
+            return () => {
+                document.removeEventListener('click', playOnInteraction);
+                document.removeEventListener('touchstart', playOnInteraction);
+            };
         }
     }, []);
 

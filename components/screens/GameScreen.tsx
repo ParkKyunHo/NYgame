@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import { ScreenLayout } from '../ScreenLayout';
 import { useGameStore } from '../../store/gameStore';
+import { useResponsive } from '../../hooks/useResponsive';
 
 const THEME = {
     brown: '#4A3728',
@@ -13,6 +14,7 @@ const THEME = {
 
 export function GameScreen() {
     const { performDraw, navigate } = useGameStore();
+    const { s, fs } = useResponsive();
     const shakeAnim = useRef(new Animated.Value(0)).current;
     const scaleAnim = useRef(new Animated.Value(1)).current;
 
@@ -46,6 +48,8 @@ export function GameScreen() {
         return () => clearTimeout(timer);
     }, []);
 
+    const boxSize = s(160);
+
     return (
         <ScreenLayout showSettings={false}>
             <View style={styles.container}>
@@ -54,6 +58,10 @@ export function GameScreen() {
                     style={[
                         styles.boxOuter,
                         {
+                            borderWidth: s(4),
+                            padding: s(4),
+                            marginBottom: s(30),
+                            shadowOffset: { width: s(6), height: s(6) },
                             transform: [
                                 { translateX: shakeAnim },
                                 { scale: scaleAnim }
@@ -61,15 +69,35 @@ export function GameScreen() {
                         }
                     ]}
                 >
-                    <View style={styles.boxInner}>
-                        <Text style={styles.boxEmoji}>🎁</Text>
+                    <View style={[
+                        styles.boxInner,
+                        {
+                            width: boxSize,
+                            height: boxSize,
+                            borderWidth: s(3),
+                        }
+                    ]}>
+                        <Text style={[styles.boxEmoji, { fontSize: fs(80) }]}>🎁</Text>
                     </View>
                 </Animated.View>
 
                 {/* 텍스트 */}
                 <View style={styles.textBox}>
-                    <Text style={styles.mainText}>두근두근...</Text>
-                    <Text style={styles.subText}>행운을 빌어요!</Text>
+                    <Text style={[
+                        styles.mainText,
+                        {
+                            fontSize: fs(26),
+                            marginBottom: s(8),
+                            textShadowOffset: { width: 1, height: 1 },
+                        }
+                    ]}>두근두근...</Text>
+                    <Text style={[
+                        styles.subText,
+                        {
+                            fontSize: fs(16),
+                            textShadowOffset: { width: 1, height: 1 },
+                        }
+                    ]}>행운을 빌어요!</Text>
                 </View>
             </View>
         </ScreenLayout>
@@ -84,46 +112,33 @@ const styles = StyleSheet.create({
     },
     boxOuter: {
         backgroundColor: THEME.brown,
-        borderWidth: 4,
         borderColor: THEME.darkBrown,
         borderRadius: 4,
-        padding: 4,
-        marginBottom: 30,
         shadowColor: '#000',
-        shadowOffset: { width: 6, height: 6 },
         shadowOpacity: 0.5,
         shadowRadius: 0,
         elevation: 12,
     },
     boxInner: {
         backgroundColor: THEME.gold,
-        borderWidth: 3,
         borderColor: THEME.darkBrown,
-        width: 160,
-        height: 160,
         alignItems: 'center',
         justifyContent: 'center',
     },
     boxEmoji: {
-        fontSize: 80,
     },
     textBox: {
         alignItems: 'center',
     },
     mainText: {
-        fontSize: 26,
         fontWeight: 'bold',
         color: THEME.darkBrown,
-        marginBottom: 8,
         textShadowColor: 'rgba(255,255,255,0.5)',
-        textShadowOffset: { width: 1, height: 1 },
         textShadowRadius: 0,
     },
     subText: {
-        fontSize: 16,
         color: THEME.brown,
         textShadowColor: 'rgba(255,255,255,0.3)',
-        textShadowOffset: { width: 1, height: 1 },
         textShadowRadius: 0,
     },
 });

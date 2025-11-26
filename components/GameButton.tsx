@@ -1,6 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ViewStyle, View } from 'react-native';
 import { colors } from '../constants/colors';
+import { useResponsive } from '../hooks/useResponsive';
 
 interface GameButtonProps {
     title: string;
@@ -17,6 +18,7 @@ export const GameButton: React.FC<GameButtonProps> = ({
     disabled,
     variant = 'primary'
 }) => {
+    const { s, fs } = useResponsive();
     const isPrimary = variant === 'primary';
 
     return (
@@ -29,12 +31,18 @@ export const GameButton: React.FC<GameButtonProps> = ({
             {/* 픽셀 스타일 외곽 테두리 */}
             <View style={[
                 styles.outerBorder,
+                { padding: s(4), borderRadius: s(2) },
                 isPrimary ? styles.outerPrimary : styles.outerSecondary,
                 disabled && styles.outerDisabled
             ]}>
                 {/* 내부 버튼 영역 */}
                 <View style={[
                     styles.innerButton,
+                    {
+                        paddingVertical: s(14),
+                        paddingHorizontal: s(32),
+                        borderWidth: s(3),
+                    },
                     isPrimary ? styles.innerPrimary : styles.innerSecondary,
                     disabled && styles.innerDisabled
                 ]}>
@@ -42,6 +50,7 @@ export const GameButton: React.FC<GameButtonProps> = ({
                     <View style={styles.highlight} />
                     <Text style={[
                         styles.buttonText,
+                        { fontSize: fs(18), letterSpacing: s(1) },
                         isPrimary ? styles.textPrimary : styles.textSecondary,
                         disabled && styles.textDisabled
                     ]}>
@@ -58,8 +67,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     outerBorder: {
-        padding: 4,
-        borderRadius: 2,
     },
     outerPrimary: {
         backgroundColor: colors.pixel.darkBrown,
@@ -71,9 +78,6 @@ const styles = StyleSheet.create({
         backgroundColor: colors.text.disabled,
     },
     innerButton: {
-        paddingVertical: 14,
-        paddingHorizontal: 32,
-        borderWidth: 3,
         position: 'relative',
         overflow: 'hidden',
     },
@@ -98,10 +102,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(255, 255, 255, 0.3)',
     },
     buttonText: {
-        fontSize: 18,
         fontWeight: 'bold',
         textAlign: 'center',
-        letterSpacing: 1,
     },
     textPrimary: {
         color: colors.pixel.darkBrown,
