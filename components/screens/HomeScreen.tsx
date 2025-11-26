@@ -82,41 +82,45 @@ export function HomeScreen() {
                     styles.titleContainer,
                     { marginBottom: s(24), transform: [{ translateY: floatAnim }] }
                 ]}>
-                    {/* 타이틀 그림자 레이어 (아웃라인 효과) */}
-                    <View style={styles.titleShadowLayer}>
+                    {/* 베이글 타이틀 (독립적인 그림자 컨테이너) */}
+                    <View style={styles.titleRow}>
+                        <View style={styles.titleShadowLayer}>
+                            <Text style={[
+                                styles.titleShadow,
+                                {
+                                    fontSize: fs(48),
+                                    letterSpacing: s(4),
+                                }
+                            ]}>베이글</Text>
+                        </View>
                         <Text style={[
-                            styles.titleShadow,
+                            styles.titleMain,
                             {
                                 fontSize: fs(48),
                                 letterSpacing: s(4),
                             }
                         ]}>베이글</Text>
                     </View>
-                    <Text style={[
-                        styles.titleMain,
-                        {
-                            fontSize: fs(48),
-                            letterSpacing: s(4),
-                        }
-                    ]}>베이글</Text>
 
-                    <View style={[styles.titleShadowLayer, { marginTop: s(-8) }]}>
+                    {/* 럭키 뽑기 타이틀 (독립적인 그림자 컨테이너) */}
+                    <View style={[styles.titleRow, { marginTop: s(-8) }]}>
+                        <View style={styles.titleShadowLayer}>
+                            <Text style={[
+                                styles.titleShadow,
+                                {
+                                    fontSize: fs(42),
+                                    letterSpacing: s(3),
+                                }
+                            ]}>럭키 뽑기</Text>
+                        </View>
                         <Text style={[
-                            styles.titleShadow,
+                            styles.titleSub,
                             {
                                 fontSize: fs(42),
                                 letterSpacing: s(3),
                             }
                         ]}>럭키 뽑기</Text>
                     </View>
-                    <Text style={[
-                        styles.titleSub,
-                        {
-                            fontSize: fs(42),
-                            letterSpacing: s(3),
-                            marginTop: s(-8),
-                        }
-                    ]}>럭키 뽑기</Text>
                 </Animated.View>
 
                 {/* 픽셀 아트 베이글 */}
@@ -239,7 +243,11 @@ const styles = StyleSheet.create({
     // 타이틀 - 글로우 효과와 다중 그림자
     titleContainer: {
         alignItems: 'center',
+    },
+    titleRow: {
         position: 'relative',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     titleShadowLayer: {
         position: 'absolute',
