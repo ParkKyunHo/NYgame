@@ -4,14 +4,7 @@ import { ScreenLayout } from '../ScreenLayout';
 import { useGameStore } from '../../store/gameStore';
 import { getPrizeDetails } from '../../lib/engine';
 import { useResponsive } from '../../hooks/useResponsive';
-
-const THEME = {
-    brown: '#4A3728',
-    darkBrown: '#3D2E22',
-    cream: '#FFF8DC',
-    gold: '#D4A84B',
-    orange: '#E8A849',
-};
+import { colors } from '../../constants/colors';
 
 export function ResultScreen() {
     const { history, navigate } = useGameStore();
@@ -42,10 +35,10 @@ export function ResultScreen() {
     };
 
     const getGradeColor = () => {
-        if (result.grade === '1st') return '#FFD700';
-        if (result.grade === '2nd') return '#C0C0C0';
-        if (result.grade === '3rd') return '#CD7F32';
-        return THEME.brown;
+        if (result.grade === '1st') return colors.grade.first;
+        if (result.grade === '2nd') return colors.grade.second;
+        if (result.grade === '3rd') return colors.grade.third;
+        return colors.pixel.rust;
     };
 
     return (
@@ -220,35 +213,35 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     signBoard: {
-        backgroundColor: THEME.brown,
-        borderColor: THEME.darkBrown,
-        borderRadius: 4,
-        shadowColor: '#000',
+        backgroundColor: colors.pixel.rust,
+        borderColor: colors.pixel.darkBrown,
+        borderRadius: 0,
+        shadowColor: colors.pixel.shadow,
         shadowOpacity: 0.4,
         shadowRadius: 0,
         elevation: 8,
     },
     signInner: {
-        backgroundColor: THEME.gold,
-        borderColor: THEME.darkBrown,
+        backgroundColor: colors.pixel.softGold,
+        borderColor: colors.pixel.rust,
         alignItems: 'center',
     },
     title: {
         fontWeight: 'bold',
-        color: THEME.darkBrown,
+        color: colors.pixel.darkBrown,
     },
     resultCard: {
-        backgroundColor: THEME.brown,
-        borderColor: THEME.darkBrown,
-        borderRadius: 4,
-        shadowColor: '#000',
+        backgroundColor: colors.pixel.rust,
+        borderColor: colors.pixel.darkBrown,
+        borderRadius: 0,
+        shadowColor: colors.pixel.shadow,
         shadowOpacity: 0.4,
         shadowRadius: 0,
         elevation: 8,
     },
     resultInner: {
-        backgroundColor: THEME.cream,
-        borderColor: THEME.brown,
+        backgroundColor: colors.pixel.peach,
+        borderColor: colors.pixel.rust,
         alignItems: 'center',
     },
     emoji: {
@@ -257,29 +250,29 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     prizeText: {
-        color: THEME.brown,
+        color: colors.pixel.rust,
     },
     ticketBox: {
-        backgroundColor: '#F5F0E6',
-        borderColor: THEME.brown,
+        backgroundColor: colors.pixel.cream,
+        borderColor: colors.pixel.rust,
         borderStyle: 'dashed',
-        borderRadius: 4,
+        borderRadius: 0,
         alignItems: 'center',
     },
     ticketNumber: {
         fontWeight: 'bold',
-        color: THEME.darkBrown,
+        color: colors.pixel.darkBrown,
         fontFamily: 'monospace',
     },
     ticketHint: {
-        color: THEME.brown,
+        color: colors.pixel.rust,
     },
     selectionBox: {
         alignItems: 'center',
     },
     selectionTitle: {
         fontWeight: 'bold',
-        color: THEME.darkBrown,
+        color: colors.pixel.darkBrown,
         textShadowColor: 'rgba(255,255,255,0.5)',
         textShadowRadius: 0,
     },
@@ -289,40 +282,40 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     bagelOption: {
-        backgroundColor: THEME.cream,
-        borderColor: THEME.brown,
-        borderRadius: 4,
+        backgroundColor: colors.pixel.peach,
+        borderColor: colors.pixel.rust,
+        borderRadius: 0,
         alignItems: 'center',
         justifyContent: 'center',
-        shadowColor: '#000',
+        shadowColor: colors.pixel.shadow,
         shadowOpacity: 0.3,
         shadowRadius: 0,
         elevation: 4,
     },
     bagelSelected: {
-        backgroundColor: THEME.gold,
-        borderColor: THEME.darkBrown,
+        backgroundColor: colors.pixel.warmOrange,
+        borderColor: colors.pixel.darkBrown,
     },
     bagelEmoji: {
     },
     bagelName: {
         fontWeight: 'bold',
-        color: THEME.darkBrown,
+        color: colors.pixel.darkBrown,
     },
     footer: {
         alignItems: 'center',
         width: '100%',
     },
     footerText: {
-        color: THEME.darkBrown,
+        color: colors.pixel.darkBrown,
         textAlign: 'center',
         textShadowColor: 'rgba(255,255,255,0.5)',
         textShadowRadius: 0,
     },
     confirmButton: {
-        backgroundColor: THEME.darkBrown,
-        borderRadius: 4,
-        shadowColor: '#000',
+        backgroundColor: colors.pixel.darkBrown,
+        borderRadius: 0,
+        shadowColor: colors.pixel.shadow,
         shadowOpacity: 0.4,
         shadowRadius: 0,
         elevation: 8,
@@ -331,14 +324,14 @@ const styles = StyleSheet.create({
         opacity: 0.5,
     },
     buttonInner: {
-        backgroundColor: THEME.brown,
-        borderTopColor: '#6B4D3A',
-        borderLeftColor: '#6B4D3A',
-        borderBottomColor: '#2D1F16',
-        borderRightColor: '#2D1F16',
+        backgroundColor: colors.pixel.warmOrange,
+        borderTopColor: colors.pixel.coral,
+        borderLeftColor: colors.pixel.coral,
+        borderBottomColor: colors.pixel.rust,
+        borderRightColor: colors.pixel.rust,
     },
     buttonText: {
-        color: THEME.cream,
+        color: colors.pixel.cream,
         fontWeight: 'bold',
     },
 });

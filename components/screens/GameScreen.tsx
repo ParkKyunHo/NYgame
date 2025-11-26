@@ -3,14 +3,7 @@ import { View, Text, StyleSheet, Animated } from 'react-native';
 import { ScreenLayout } from '../ScreenLayout';
 import { useGameStore } from '../../store/gameStore';
 import { useResponsive } from '../../hooks/useResponsive';
-
-const THEME = {
-    brown: '#4A3728',
-    darkBrown: '#3D2E22',
-    cream: '#FFF8DC',
-    gold: '#D4A84B',
-    orange: '#E8A849',
-};
+import { colors } from '../../constants/colors';
 
 export function GameScreen() {
     const { performDraw, navigate } = useGameStore();
@@ -111,17 +104,17 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     boxOuter: {
-        backgroundColor: THEME.brown,
-        borderColor: THEME.darkBrown,
-        borderRadius: 4,
-        shadowColor: '#000',
+        backgroundColor: colors.pixel.rust,
+        borderColor: colors.pixel.darkBrown,
+        borderRadius: 0,
+        shadowColor: colors.pixel.shadow,
         shadowOpacity: 0.5,
         shadowRadius: 0,
         elevation: 12,
     },
     boxInner: {
-        backgroundColor: THEME.gold,
-        borderColor: THEME.darkBrown,
+        backgroundColor: colors.pixel.softGold,
+        borderColor: colors.pixel.rust,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -132,12 +125,12 @@ const styles = StyleSheet.create({
     },
     mainText: {
         fontWeight: 'bold',
-        color: THEME.darkBrown,
+        color: colors.pixel.darkBrown,
         textShadowColor: 'rgba(255,255,255,0.5)',
         textShadowRadius: 0,
     },
     subText: {
-        color: THEME.brown,
+        color: colors.pixel.rust,
         textShadowColor: 'rgba(255,255,255,0.3)',
         textShadowRadius: 0,
     },

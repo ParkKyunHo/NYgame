@@ -1,7 +1,8 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, Platform } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, Platform, Animated, Easing } from 'react-native';
 import { ScreenLayout } from '../ScreenLayout';
 import { GameButton } from '../GameButton';
+import { PixelBagel } from '../PixelBagel';
 import { colors } from '../../constants/colors';
 import { useGameStore } from '../../store/gameStore';
 import { useResponsive } from '../../hooks/useResponsive';
@@ -41,6 +42,28 @@ export function HomeScreen() {
     const { isWeekendMode, getTodayParticipants, navigate } = useGameStore();
     const { s, fs, scale, isTablet } = useResponsive();
 
+    // 타이틀 부유 애니메이션
+    const floatAnim = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        Animated.loop(
+            Animated.sequence([
+                Animated.timing(floatAnim, {
+                    toValue: -6,
+                    duration: 1500,
+                    easing: Easing.inOut(Easing.ease),
+                    useNativeDriver: true,
+                }),
+                Animated.timing(floatAnim, {
+                    toValue: 0,
+                    duration: 1500,
+                    easing: Easing.inOut(Easing.ease),
+                    useNativeDriver: true,
+                }),
+            ])
+        ).start();
+    }, []);
+
     const handleStart = () => {
         navigate('game');
     };
@@ -54,32 +77,52 @@ export function HomeScreen() {
                 ]}
                 showsVerticalScrollIndicator={false}
             >
-                {/* 타이틀 - 이미지처럼 크고 굵은 텍스트 */}
-                <View style={[styles.titleContainer, { marginBottom: s(30) }]}>
+                {/* 타이틀 - 글로우 효과와 부유 애니메이션 */}
+                <Animated.View style={[
+                    styles.titleContainer,
+                    { marginBottom: s(24), transform: [{ translateY: floatAnim }] }
+                ]}>
+                    {/* 타이틀 그림자 레이어 (아웃라인 효과) */}
+                    <View style={styles.titleShadowLayer}>
+                        <Text style={[
+                            styles.titleShadow,
+                            {
+                                fontSize: fs(48),
+                                letterSpacing: s(4),
+                            }
+                        ]}>베이글</Text>
+                    </View>
                     <Text style={[
                         styles.titleMain,
                         {
-                            fontSize: fs(52),
-                            textShadowOffset: { width: s(4), height: s(4) },
-                            letterSpacing: s(2),
-                            fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
+                            fontSize: fs(48),
+                            letterSpacing: s(4),
                         }
                     ]}>베이글</Text>
+
+                    <View style={[styles.titleShadowLayer, { marginTop: s(-8) }]}>
+                        <Text style={[
+                            styles.titleShadow,
+                            {
+                                fontSize: fs(42),
+                                letterSpacing: s(3),
+                            }
+                        ]}>럭키 뽑기</Text>
+                    </View>
                     <Text style={[
                         styles.titleSub,
                         {
-                            fontSize: fs(52),
-                            textShadowOffset: { width: s(4), height: s(4) },
-                            letterSpacing: s(2),
-                            fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
+                            fontSize: fs(42),
+                            letterSpacing: s(3),
+                            marginTop: s(-8),
                         }
                     ]}>럭키 뽑기</Text>
-                </View>
+                </Animated.View>
 
-                {/* 캐릭터 이미지 영역 - 흰색 배경 + 도넛 이미지 */}
-                <PixelBox style={[styles.characterBox, { width: s(180), marginBottom: s(24) }]} variant="default" scale={scale}>
-                    <View style={[styles.characterInner, { paddingVertical: s(10) }]}>
-                        <Text style={[styles.characterEmoji, { fontSize: fs(90) }]}>🍩</Text>
+                {/* 픽셀 아트 베이글 */}
+                <PixelBox style={[styles.characterBox, { marginBottom: s(20) }]} variant="default" scale={scale}>
+                    <View style={[styles.characterInner, { padding: s(16) }]}>
+                        <PixelBagel size={100} animated={true} />
                     </View>
                 </PixelBox>
 
@@ -158,7 +201,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.pixel.shadow,
     },
     boxOuter: {
-        backgroundColor: colors.pixel.brown,
+        backgroundColor: colors.pixel.rust,
         borderRadius: 0,
     },
     boxOuterDark: {
@@ -170,60 +213,74 @@ const styles = StyleSheet.create({
         borderRadius: 0,
     },
     boxOuterGold: {
-        backgroundColor: colors.pixel.brown,
+        backgroundColor: colors.pixel.rust,
         borderRadius: 0,
     },
     boxInner: {
-        backgroundColor: colors.pixel.cream,
-        borderColor: colors.pixel.brown,
+        backgroundColor: colors.pixel.peach,
+        borderColor: colors.pixel.rust,
     },
     boxInnerDark: {
         backgroundColor: colors.pixel.brown,
         borderColor: colors.pixel.darkBrown,
     },
     boxInnerTransparent: {
-        backgroundColor: 'rgba(255, 248, 220, 0.9)',
-        borderColor: colors.pixel.brown,
+        backgroundColor: 'rgba(255, 203, 164, 0.85)',
+        borderColor: colors.pixel.rust,
     },
     boxInnerGold: {
-        backgroundColor: colors.pixel.lightBeige,
-        borderColor: colors.pixel.brown,
+        backgroundColor: colors.pixel.softGold,
+        borderColor: colors.pixel.warmOrange,
     },
     scrollContent: {
         flexGrow: 1,
         alignItems: 'center',
     },
-    // 타이틀 - 이미지처럼 굵고 큰 텍스트, 그림자 효과
+    // 타이틀 - 글로우 효과와 다중 그림자
     titleContainer: {
         alignItems: 'center',
+        position: 'relative',
+    },
+    titleShadowLayer: {
+        position: 'absolute',
+        top: 3,
+        left: 3,
+    },
+    titleShadow: {
+        fontWeight: '900',
+        color: colors.pixel.titleOutline,
+        textShadowColor: colors.pixel.shadow,
+        textShadowOffset: { width: 2, height: 2 },
+        textShadowRadius: 0,
     },
     titleMain: {
         fontWeight: '900',
-        color: colors.pixel.cream,
-        textShadowColor: colors.pixel.darkBrown,
+        color: colors.pixel.softGold,
+        textShadowColor: colors.pixel.warmOrange,
+        textShadowOffset: { width: 2, height: 2 },
         textShadowRadius: 0,
     },
     titleSub: {
         fontWeight: '900',
-        color: colors.pixel.cream,
-        textShadowColor: colors.pixel.darkBrown,
+        color: colors.pixel.titleGlow,
+        textShadowColor: colors.pixel.coral,
+        textShadowOffset: { width: 2, height: 2 },
         textShadowRadius: 0,
     },
-    // 캐릭터 박스 - 이미지처럼 사각형
+    // 캐릭터 박스
     characterBox: {
     },
     characterInner: {
         alignItems: 'center',
         justifyContent: 'center',
     },
-    characterEmoji: {
-    },
     // 안내 박스
     infoBox: {
     },
     infoText: {
-        color: colors.pixel.brown,
+        color: colors.pixel.rust,
         textAlign: 'center',
+        fontWeight: '600',
     },
     infoHighlight: {
         fontWeight: 'bold',
@@ -234,7 +291,7 @@ const styles = StyleSheet.create({
     startButton: {
         width: '100%',
     },
-    // 통계 박스 - 이미지 참고
+    // 통계 박스 - 반투명 배경
     statsBox: {
         width: '100%',
     },
@@ -245,20 +302,20 @@ const styles = StyleSheet.create({
     },
     statsTitle: {
         fontWeight: 'bold',
-        color: colors.pixel.darkBrown,
+        color: colors.pixel.rust,
     },
     modeBadge: {
-        backgroundColor: colors.pixel.cream,
-        borderColor: colors.pixel.darkBrown,
+        backgroundColor: colors.pixel.warmOrange,
+        borderColor: colors.pixel.rust,
     },
     modeBadgeText: {
         fontWeight: 'bold',
-        color: colors.pixel.darkBrown,
+        color: colors.pixel.cream,
     },
     statsDivider: {
         height: 2,
-        backgroundColor: colors.pixel.brown,
-        opacity: 0.5,
+        backgroundColor: colors.pixel.rust,
+        opacity: 0.4,
     },
     statRow: {
         flexDirection: 'row',
@@ -272,15 +329,16 @@ const styles = StyleSheet.create({
     medalIcon: {
     },
     gradeText: {
-        color: colors.pixel.brown,
-        fontWeight: '500',
+        color: colors.pixel.rust,
+        fontWeight: '600',
     },
     statValueBox: {
-        backgroundColor: colors.pixel.darkBrown,
+        backgroundColor: colors.pixel.rust,
+        borderRadius: 2,
     },
     statValue: {
         fontWeight: 'bold',
-        color: colors.pixel.gold,
+        color: colors.pixel.softGold,
     },
     participantsRow: {
         flexDirection: 'row',
@@ -288,10 +346,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     participantsLabel: {
-        color: colors.pixel.brown,
+        color: colors.pixel.rust,
     },
     participantsValue: {
         fontWeight: 'bold',
-        color: colors.pixel.darkBrown,
+        color: colors.pixel.warmOrange,
     },
 });
