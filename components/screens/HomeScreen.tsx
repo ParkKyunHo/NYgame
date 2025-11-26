@@ -77,50 +77,26 @@ export function HomeScreen() {
                 ]}
                 showsVerticalScrollIndicator={false}
             >
-                {/* 타이틀 - 글로우 효과와 부유 애니메이션 */}
+                {/* 타이틀 - 픽셀 스타일 텍스트 */}
                 <Animated.View style={[
                     styles.titleContainer,
                     { marginBottom: s(24), transform: [{ translateY: floatAnim }] }
                 ]}>
-                    {/* 베이글 타이틀 (독립적인 그림자 컨테이너) */}
-                    <View style={styles.titleRow}>
-                        <View style={styles.titleShadowLayer}>
-                            <Text style={[
-                                styles.titleShadow,
-                                {
-                                    fontSize: fs(48),
-                                    letterSpacing: s(4),
-                                }
-                            ]}>베이글</Text>
-                        </View>
-                        <Text style={[
-                            styles.titleMain,
-                            {
-                                fontSize: fs(48),
-                                letterSpacing: s(4),
-                            }
-                        ]}>베이글</Text>
-                    </View>
-
-                    {/* 럭키 뽑기 타이틀 (독립적인 그림자 컨테이너) */}
-                    <View style={[styles.titleRow, { marginTop: s(-8) }]}>
-                        <View style={styles.titleShadowLayer}>
-                            <Text style={[
-                                styles.titleShadow,
-                                {
-                                    fontSize: fs(42),
-                                    letterSpacing: s(3),
-                                }
-                            ]}>럭키 뽑기</Text>
-                        </View>
-                        <Text style={[
-                            styles.titleSub,
-                            {
-                                fontSize: fs(42),
-                                letterSpacing: s(3),
-                            }
-                        ]}>럭키 뽑기</Text>
-                    </View>
+                    <Text style={[
+                        styles.titleMain,
+                        {
+                            fontSize: fs(48),
+                            letterSpacing: s(4),
+                        }
+                    ]}>베이글</Text>
+                    <Text style={[
+                        styles.titleSub,
+                        {
+                            fontSize: fs(42),
+                            letterSpacing: s(3),
+                            marginTop: s(-4),
+                        }
+                    ]}>럭키 뽑기</Text>
                 </Animated.View>
 
                 {/* 픽셀 아트 베이글 */}
@@ -240,39 +216,22 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         alignItems: 'center',
     },
-    // 타이틀 - 글로우 효과와 다중 그림자
+    // 타이틀 - 픽셀 스타일 텍스트
     titleContainer: {
         alignItems: 'center',
-    },
-    titleRow: {
-        position: 'relative',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    titleShadowLayer: {
-        position: 'absolute',
-        top: 3,
-        left: 3,
-    },
-    titleShadow: {
-        fontWeight: '900',
-        color: colors.pixel.titleOutline,
-        textShadowColor: colors.pixel.shadow,
-        textShadowOffset: { width: 2, height: 2 },
-        textShadowRadius: 0,
     },
     titleMain: {
         fontWeight: '900',
         color: colors.pixel.softGold,
-        textShadowColor: colors.pixel.warmOrange,
-        textShadowOffset: { width: 2, height: 2 },
+        textShadowColor: colors.pixel.rust,
+        textShadowOffset: { width: 3, height: 3 },
         textShadowRadius: 0,
     },
     titleSub: {
         fontWeight: '900',
         color: colors.pixel.titleGlow,
-        textShadowColor: colors.pixel.coral,
-        textShadowOffset: { width: 2, height: 2 },
+        textShadowColor: colors.pixel.rust,
+        textShadowOffset: { width: 3, height: 3 },
         textShadowRadius: 0,
     },
     // 캐릭터 박스
