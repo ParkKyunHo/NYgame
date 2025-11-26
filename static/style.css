@@ -1,0 +1,200 @@
+/* 기본 리셋 및 설정 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Galmuri11', 'Press Start 2P', cursive;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ========================================
+   배경 레이어
+   ======================================== */
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+/* 고정 배경 (하늘 + 건물) */
+.bg-sky {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('../assets/images/bg_sky_buildings.png') center/cover no-repeat;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+/* 움직이는 구름 레이어 */
+.bg-clouds {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%; /* 끊김 없는 스크롤을 위해 2배 너비 */
+    height: 100%;
+    background: url('../assets/images/bg_clouds.png') repeat-x;
+    background-size: 50% 100%; /* 원본 크기 유지하면서 반복 */
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    animation: cloud-scroll 40s linear infinite;
+}
+
+/* 구름 스크롤 애니메이션 */
+@keyframes cloud-scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%); /* 절반 이동 후 리셋 (끊김 없음) */
+    }
+}
+
+/* ========================================
+   메인 콘텐츠
+   ======================================== */
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 20px;
+    z-index: 1;
+}
+
+/* 타이틀 배너 */
+.title-banner {
+    max-width: 90%;
+    width: auto;
+    height: auto;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    filter: drop-shadow(4px 4px 0 rgba(0, 0, 0, 0.3));
+}
+
+/* ========================================
+   참여자 수 박스 (CSS 구현)
+   ======================================== */
+.stats-box {
+    background-color: #FFF8DC; /* 아이보리/크림색 */
+    border: 4px solid #4A3728; /* 갈색 테두리 */
+    border-radius: 4px;
+    padding: 16px 40px;
+    text-align: center;
+    box-shadow: 4px 4px 0 #3D2E22; /* 픽셀 그림자 */
+    margin: 8px 0;
+}
+
+.stats-label {
+    display: block;
+    font-size: 14px;
+    color: #4A3728;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+.stats-value {
+    display: block;
+    font-size: 28px;
+    color: #3D2E22;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+/* ========================================
+   뽑기 버튼
+   ======================================== */
+.start-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-top: 8px;
+    outline: none;
+    -webkit-tap-highlight-color: transparent; /* 모바일 탭 하이라이트 제거 */
+}
+
+.start-button:focus {
+    outline: none;
+}
+
+.start-button:focus-visible {
+    outline: 3px solid #D4A84B;
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+
+.btn-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    filter: drop-shadow(4px 4px 0 rgba(0, 0, 0, 0.3));
+    transition: filter 0.1s ease;
+}
+
+/* 버튼 호버 효과 */
+.start-button:hover .btn-img {
+    filter: drop-shadow(4px 4px 0 rgba(0, 0, 0, 0.4)) brightness(1.05);
+}
+
+/* 버튼 눌림 효과 (CSS 보조) */
+.start-button:active .btn-img {
+    filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.3));
+    transform: translate(2px, 2px);
+}
+
+/* ========================================
+   반응형 디자인
+   ======================================== */
+@media (max-width: 480px) {
+    .stats-box {
+        padding: 12px 28px;
+    }
+
+    .stats-label {
+        font-size: 12px;
+    }
+
+    .stats-value {
+        font-size: 22px;
+    }
+
+    .title-banner {
+        max-width: 95%;
+    }
+}
+
+@media (min-width: 768px) {
+    .content {
+        gap: 32px;
+    }
+
+    .stats-box {
+        padding: 20px 48px;
+    }
+
+    .stats-label {
+        font-size: 16px;
+    }
+
+    .stats-value {
+        font-size: 32px;
+    }
+}

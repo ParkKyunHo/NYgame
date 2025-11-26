@@ -1,9 +1,10 @@
 {
   "expo": {
     "name": "NYgame",
+    "scheme": "nygame",
     "slug": "NYgame",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "landscape",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
@@ -24,7 +25,19 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro",
+      "output": "single",
+      "name": "베이글 럭키 뽑기",
+      "shortName": "베이글뽑기",
+      "description": "베이글 카페 럭키 드로우 이벤트 앱",
+      "themeColor": "#FF6B35",
+      "backgroundColor": "#FFF9F5"
+    },
+    "plugins": [
+      "expo-sqlite",
+      "expo-router",
+      "expo-font"
+    ]
   }
 }

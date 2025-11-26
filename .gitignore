@@ -39,3 +39,9 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# Backup files (large)
+assets/images/backup/
+
+# Windows artifacts
+nul

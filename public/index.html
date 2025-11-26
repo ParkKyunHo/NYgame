@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>%WEB_TITLE%</title>
+    <style id="expo-reset">
+      html, body {
+        height: 100%;
+        margin: 0;
+      }
+      body {
+        overflow: hidden;
+        background: #000;
+      }
+      #root {
+        display: flex;
+        height: 100%;
+        flex: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 비디오 배경 - React 외부에서 관리하여 re-render 영향 없음 -->
+    <video
+      id="global-bg-video"
+      loop
+      muted
+      playsinline
+      style="position:fixed; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:-1; pointer-events:none;"
+    >
+      <source src="/background.mp4" type="video/mp4">
+    </video>
+
+    <script>
+      // 비디오 재생 시간 저장/복원으로 페이지 이동 시 끊김 방지
+      (function() {
+        var video = document.getElementById('global-bg-video');
+        var STORAGE_KEY = 'bgVideoTime';
+
+        // 저장된 재생 시간 복원
+        var savedTime = sessionStorage.getItem(STORAGE_KEY);
+        if (savedTime) {
+          video.currentTime = parseFloat(savedTime);
+        }
+
+        // 재생 시작
+        video.play().catch(function() {});
+
+        // 주기적으로 재생 시간 저장 (100ms마다)
+        setInterval(function() {
+          if (!video.paused && !isNaN(video.currentTime)) {
+            sessionStorage.setItem(STORAGE_KEY, video.currentTime.toString());
+          }
+        }, 100);
+
+        // 페이지 떠나기 전에 재생 시간 저장
+        window.addEventListener('beforeunload', function() {
+          if (!isNaN(video.currentTime)) {
+            sessionStorage.setItem(STORAGE_KEY, video.currentTime.toString());
+          }
+        });
+      })();
+    </script>
+
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>

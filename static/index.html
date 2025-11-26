@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>베이글 럭키 뽑기</title>
+    <!-- 픽셀 폰트: Press Start 2P (Google Fonts) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <!-- 한글 픽셀 폰트 대안: Galmuri -->
+    <link href="https://cdn.jsdelivr.net/npm/galmuri/dist/galmuri.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 배경 레이어 -->
+    <div class="background">
+        <div class="bg-sky"></div>
+        <div class="bg-clouds"></div>
+    </div>
+
+    <!-- 메인 콘텐츠 -->
+    <main class="content">
+        <!-- 상단 타이틀 배너 -->
+        <img src="../assets/images/ui_title_banner.png" alt="럭키 뽑기" class="title-banner">
+
+        <!-- 참여자 수 박스 (CSS로 구현) -->
+        <div class="stats-box">
+            <span class="stats-label">오늘 참여자</span>
+            <span class="stats-value" id="participant-count">9명</span>
+        </div>
+
+        <!-- 뽑기 버튼 -->
+        <button class="start-button" id="start-btn">
+            <img src="../assets/images/btn_start_normal.png" alt="뽑기 시작!" class="btn-img" id="btn-img">
+        </button>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

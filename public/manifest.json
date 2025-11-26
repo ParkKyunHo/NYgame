@@ -1,0 +1,24 @@
+{
+  "name": "베이글 럭키 뽑기",
+  "short_name": "베이글뽑기",
+  "description": "베이글 카페 럭키 드로우 이벤트 앱",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFF9F5",
+  "theme_color": "#FF6B35",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/assets/icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
