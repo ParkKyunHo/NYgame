@@ -109,6 +109,82 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }
 
                         <View style={styles.divider} />
 
+                        {/* 뽑기 모드 설정 */}
+                        <Text style={styles.sectionTitle}>뽑기 모드</Text>
+                        <View style={styles.modeButtonGroup}>
+                            <TouchableOpacity
+                                style={[
+                                    styles.modeButton,
+                                    settings.drawMode === 'timer' && styles.modeButtonActive
+                                ]}
+                                onPress={() => updateSettings({ drawMode: 'timer' })}
+                            >
+                                <Text style={[
+                                    styles.modeButtonText,
+                                    settings.drawMode === 'timer' && styles.modeButtonTextActive
+                                ]}>
+                                    타이머
+                                </Text>
+                                <Text style={styles.modeButtonDesc}>3초 자동 뽑기</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[
+                                    styles.modeButton,
+                                    settings.drawMode === 'card' && styles.modeButtonActive
+                                ]}
+                                onPress={() => updateSettings({ drawMode: 'card' })}
+                            >
+                                <Text style={[
+                                    styles.modeButtonText,
+                                    settings.drawMode === 'card' && styles.modeButtonTextActive
+                                ]}>
+                                    카드
+                                </Text>
+                                <Text style={styles.modeButtonDesc}>카드 선택 뽑기</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        {/* 카드 수 설정 (카드 모드일 때만 표시) */}
+                        {settings.drawMode === 'card' && (
+                            <>
+                                <Text style={[styles.sectionTitle, { marginTop: 16 }]}>카드 수</Text>
+                                <View style={styles.modeButtonGroup}>
+                                    <TouchableOpacity
+                                        style={[
+                                            styles.modeButton,
+                                            settings.cardCount === 3 && styles.modeButtonActive
+                                        ]}
+                                        onPress={() => updateSettings({ cardCount: 3 })}
+                                    >
+                                        <Text style={[
+                                            styles.modeButtonText,
+                                            settings.cardCount === 3 && styles.modeButtonTextActive
+                                        ]}>
+                                            3장
+                                        </Text>
+                                        <Text style={styles.modeButtonDesc}>3장 중 1개 당첨</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={[
+                                            styles.modeButton,
+                                            settings.cardCount === 5 && styles.modeButtonActive
+                                        ]}
+                                        onPress={() => updateSettings({ cardCount: 5 })}
+                                    >
+                                        <Text style={[
+                                            styles.modeButtonText,
+                                            settings.cardCount === 5 && styles.modeButtonTextActive
+                                        ]}>
+                                            5장
+                                        </Text>
+                                        <Text style={styles.modeButtonDesc}>5장 중 1개 당첨</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </>
+                        )}
+
+                        <View style={styles.divider} />
+
                         {/* 남은 상품 */}
                         <Text style={styles.sectionTitle}>남은 상품</Text>
                         <View style={styles.quotaContainer}>
@@ -309,6 +385,37 @@ const styles = StyleSheet.create({
     },
     buttonGroup: {
         marginTop: 8,
+    },
+    modeButtonGroup: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        gap: 12,
+    },
+    modeButton: {
+        flex: 1,
+        backgroundColor: colors.pixel.cream,
+        borderWidth: 3,
+        borderColor: colors.pixel.brown,
+        paddingVertical: 12,
+        paddingHorizontal: 8,
+        alignItems: 'center',
+    },
+    modeButtonActive: {
+        backgroundColor: colors.pixel.gold,
+        borderColor: colors.pixel.darkBrown,
+    },
+    modeButtonText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: colors.pixel.brown,
+    },
+    modeButtonTextActive: {
+        color: colors.pixel.darkBrown,
+    },
+    modeButtonDesc: {
+        fontSize: 10,
+        color: colors.pixel.brown,
+        marginTop: 4,
     },
 });
 
