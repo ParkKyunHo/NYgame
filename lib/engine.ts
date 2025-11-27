@@ -1,4 +1,4 @@
-export type PrizeGrade = '1st' | '2nd' | '3rd' | 'lose';
+export type PrizeGrade = '1st' | '2nd' | '3rd' | 'lose' | 'card_win';
 
 interface ProbabilityConfig {
     grade: PrizeGrade;

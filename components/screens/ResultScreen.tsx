@@ -7,27 +7,41 @@ import { useResponsive } from '../../hooks/useResponsive';
 import { colors } from '../../constants/colors';
 
 export function ResultScreen() {
-    const { history, navigate } = useGameStore();
+    const { history, navigate, settings, cardGame } = useGameStore();
     const { s, fs } = useResponsive();
     const [selectedBagel, setSelectedBagel] = useState<string | null>(null);
 
     const result = history[0];
+    const isCardMode = settings.drawMode === 'card';
 
     if (!result) {
         navigate('home');
         return null;
     }
 
+    // 카드 모드: cardGame에서 당첨 여부와 베이글 수 확인
+    const cardModeWin = isCardMode && cardGame && cardGame.selectedCardIndex !== null
+        ? cardGame.cards[cardGame.selectedCardIndex]?.isWinning
+        : false;
+    const cardModeBagelCount = isCardMode && cardGame ? cardGame.bagelCount : 0;
+
     const prize = getPrizeDetails(result.grade);
-    const isWin = result.grade !== 'lose';
+    const isWin = isCardMode ? cardModeWin : result.grade !== 'lose';
     const isThirdPlace = result.grade === '3rd';
 
     const handleConfirm = () => {
-        if (isThirdPlace && !selectedBagel) return;
+        if (!isCardMode && isThirdPlace && !selectedBagel) return;
         navigate('home');
     };
 
+    const handleRetry = () => {
+        navigate('game');
+    };
+
     const getGradeText = () => {
+        if (isCardMode) {
+            return isWin ? `${cardModeBagelCount}개 당첨!` : '아쉽네요...';
+        }
         if (result.grade === '1st') return '1등 당첨!';
         if (result.grade === '2nd') return '2등 당첨!';
         if (result.grade === '3rd') return '3등 당첨!';
@@ -172,6 +186,35 @@ export function ResultScreen() {
                         </Text>
                     )}
 
+                    {/* 카드 모드: 다시 뽑기 버튼 */}
+                    {isCardMode && (
+                        <TouchableOpacity
+                            style={[
+                                styles.retryButton,
+                                {
+                                    padding: s(4),
+                                    shadowOffset: { width: s(4), height: s(4) },
+                                    marginBottom: s(12),
+                                },
+                            ]}
+                            onPress={handleRetry}
+                            activeOpacity={0.8}
+                        >
+                            <View style={[
+                                styles.retryButtonInner,
+                                {
+                                    borderWidth: s(3),
+                                    paddingHorizontal: s(36),
+                                    paddingVertical: s(14),
+                                }
+                            ]}>
+                                <Text style={[styles.buttonText, { fontSize: fs(18), letterSpacing: s(1) }]}>
+                                    🎴 다시 뽑기
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    )}
+
                     <TouchableOpacity
                         style={[
                             styles.confirmButton,
@@ -179,11 +222,11 @@ export function ResultScreen() {
                                 padding: s(4),
                                 shadowOffset: { width: s(4), height: s(4) },
                             },
-                            (isThirdPlace && !selectedBagel) && styles.buttonDisabled
+                            (!isCardMode && isThirdPlace && !selectedBagel) && styles.buttonDisabled
                         ]}
                         onPress={handleConfirm}
                         activeOpacity={0.8}
-                        disabled={isThirdPlace && !selectedBagel}
+                        disabled={!isCardMode && isThirdPlace && !selectedBagel}
                     >
                         <View style={[
                             styles.buttonInner,
@@ -194,9 +237,11 @@ export function ResultScreen() {
                             }
                         ]}>
                             <Text style={[styles.buttonText, { fontSize: fs(18), letterSpacing: s(1) }]}>
-                                {isWin
-                                    ? (isThirdPlace && !selectedBagel ? "베이글을 선택해주세요" : "직원 확인 요청")
-                                    : "확인"}
+                                {isCardMode
+                                    ? (isWin ? "직원 확인 요청" : "홈으로")
+                                    : (isWin
+                                        ? (isThirdPlace && !selectedBagel ? "베이글을 선택해주세요" : "직원 확인 요청")
+                                        : "확인")}
                             </Text>
                         </View>
                     </TouchableOpacity>
@@ -319,6 +364,21 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.4,
         shadowRadius: 0,
         elevation: 8,
+    },
+    retryButton: {
+        backgroundColor: colors.pixel.rust,
+        borderRadius: 0,
+        shadowColor: colors.pixel.shadow,
+        shadowOpacity: 0.4,
+        shadowRadius: 0,
+        elevation: 8,
+    },
+    retryButtonInner: {
+        backgroundColor: colors.pixel.brown,
+        borderTopColor: colors.pixel.rust,
+        borderLeftColor: colors.pixel.rust,
+        borderBottomColor: colors.pixel.darkBrown,
+        borderRightColor: colors.pixel.darkBrown,
     },
     buttonDisabled: {
         opacity: 0.5,

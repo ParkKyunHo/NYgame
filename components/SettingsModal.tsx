@@ -147,38 +147,50 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }
                         {/* 카드 수 설정 (카드 모드일 때만 표시) */}
                         {settings.drawMode === 'card' && (
                             <>
-                                <Text style={[styles.sectionTitle, { marginTop: 16 }]}>카드 수</Text>
-                                <View style={styles.modeButtonGroup}>
-                                    <TouchableOpacity
-                                        style={[
-                                            styles.modeButton,
-                                            settings.cardCount === 3 && styles.modeButtonActive
-                                        ]}
-                                        onPress={() => updateSettings({ cardCount: 3 })}
-                                    >
-                                        <Text style={[
-                                            styles.modeButtonText,
-                                            settings.cardCount === 3 && styles.modeButtonTextActive
-                                        ]}>
-                                            3장
-                                        </Text>
-                                        <Text style={styles.modeButtonDesc}>3장 중 1개 당첨</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        style={[
-                                            styles.modeButton,
-                                            settings.cardCount === 5 && styles.modeButtonActive
-                                        ]}
-                                        onPress={() => updateSettings({ cardCount: 5 })}
-                                    >
-                                        <Text style={[
-                                            styles.modeButtonText,
-                                            settings.cardCount === 5 && styles.modeButtonTextActive
-                                        ]}>
-                                            5장
-                                        </Text>
-                                        <Text style={styles.modeButtonDesc}>5장 중 1개 당첨</Text>
-                                    </TouchableOpacity>
+                                <Text style={[styles.sectionTitle, { marginTop: 16 }]}>카드 수: {settings.cardCount}장</Text>
+                                <View style={styles.sliderContainer}>
+                                    <Text style={styles.sliderLabel}>1</Text>
+                                    <View style={styles.sliderTrack}>
+                                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                                            <TouchableOpacity
+                                                key={num}
+                                                style={[
+                                                    styles.sliderDot,
+                                                    settings.cardCount === num && styles.sliderDotActive
+                                                ]}
+                                                onPress={() => updateSettings({ cardCount: num })}
+                                            >
+                                                <Text style={[
+                                                    styles.sliderDotText,
+                                                    settings.cardCount === num && styles.sliderDotTextActive
+                                                ]}>{num}</Text>
+                                            </TouchableOpacity>
+                                        ))}
+                                    </View>
+                                    <Text style={styles.sliderLabel}>10</Text>
+                                </View>
+
+                                <Text style={[styles.sectionTitle, { marginTop: 16 }]}>당첨 베이글 수: {settings.cardBagelCount}개</Text>
+                                <View style={styles.sliderContainer}>
+                                    <Text style={styles.sliderLabel}>1</Text>
+                                    <View style={styles.sliderTrack}>
+                                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                                            <TouchableOpacity
+                                                key={num}
+                                                style={[
+                                                    styles.sliderDot,
+                                                    settings.cardBagelCount === num && styles.sliderDotActive
+                                                ]}
+                                                onPress={() => updateSettings({ cardBagelCount: num })}
+                                            >
+                                                <Text style={[
+                                                    styles.sliderDotText,
+                                                    settings.cardBagelCount === num && styles.sliderDotTextActive
+                                                ]}>{num}</Text>
+                                            </TouchableOpacity>
+                                        ))}
+                                    </View>
+                                    <Text style={styles.sliderLabel}>10</Text>
                                 </View>
                             </>
                         )}
@@ -416,6 +428,48 @@ const styles = StyleSheet.create({
         fontSize: 10,
         color: colors.pixel.brown,
         marginTop: 4,
+    },
+    sliderContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 8,
+        paddingHorizontal: 4,
+    },
+    sliderLabel: {
+        fontSize: 12,
+        color: colors.pixel.brown,
+        fontWeight: 'bold',
+        width: 20,
+        textAlign: 'center',
+    },
+    sliderTrack: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginHorizontal: 8,
+    },
+    sliderDot: {
+        width: 24,
+        height: 24,
+        borderRadius: 4,
+        backgroundColor: colors.pixel.cream,
+        borderWidth: 2,
+        borderColor: colors.pixel.brown,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    sliderDotActive: {
+        backgroundColor: colors.pixel.gold,
+        borderColor: colors.pixel.darkBrown,
+    },
+    sliderDotText: {
+        fontSize: 10,
+        color: colors.pixel.brown,
+        fontWeight: 'bold',
+    },
+    sliderDotTextActive: {
+        color: colors.pixel.darkBrown,
     },
 });
 

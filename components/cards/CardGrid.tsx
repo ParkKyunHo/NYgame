@@ -93,10 +93,10 @@ export const CardGrid: React.FC<CardGridProps> = ({
                 {cards.map((card, index) => (
                     <PixelCard
                         key={card.id}
-                        grade={card.grade}
                         isRevealed={revealedIndices.includes(index)}
                         isSelected={selectedIndex === index}
                         isWinning={card.isWinning}
+                        bagelCount={card.bagelCount}
                         onPress={() => handleCardPress(index)}
                         disabled={!isSelecting || selectedIndex !== null}
                         index={index}

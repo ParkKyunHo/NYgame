@@ -21,20 +21,21 @@ interface Settings {
     autoStopOnEnd: boolean;      // 이벤트 종료 시 자동 멈춤
     soundEnabled: boolean;       // 사운드 ON/OFF
     drawMode: 'timer' | 'card';  // 뽑기 모드
-    cardCount: 3 | 5;            // 카드 수
+    cardCount: number;           // 카드 수 (1~10)
+    cardBagelCount: number;      // 카드 모드 당첨 베이글 수
 }
 
 export interface CardData {
     id: number;
-    grade: PrizeGrade;
     isWinning: boolean;
+    bagelCount: number;          // 당첨 시 베이글 수 (꽝은 0)
 }
 
 interface CardGameState {
     cards: CardData[];
     selectedCardIndex: number | null;
     winningCardIndex: number;
-    winningGrade: PrizeGrade;
+    bagelCount: number;          // 당첨 베이글 수
     revealedCards: number[];
     gamePhase: 'selecting' | 'revealing' | 'complete';
 }
@@ -93,6 +94,7 @@ const DEFAULT_SETTINGS: Settings = {
     soundEnabled: true,
     drawMode: 'timer',
     cardCount: 5,
+    cardBagelCount: 1,
 };
 
 export const useGameStore = create<GameState>()(
@@ -184,27 +186,20 @@ export const useGameStore = create<GameState>()(
 
             // Card Game Actions
             initializeCardGame: () => {
-                const { isWeekendMode, quota, settings } = get();
+                const { settings } = get();
                 const cardCount = settings.cardCount;
+                const bagelCount = settings.cardBagelCount;
 
-                // 1. 당첨 등급 결정 (기존 확률 시스템 사용)
-                let winningGrade = drawItem(isWeekendMode);
-
-                // 2. 쿼터 체크
-                if (winningGrade === '1st' && quota.first <= 0) winningGrade = 'lose';
-                if (winningGrade === '2nd' && quota.second <= 0) winningGrade = 'lose';
-                if (winningGrade === '3rd' && quota.third <= 0) winningGrade = 'lose';
-
-                // 3. 당첨 카드 위치 랜덤 결정
+                // 카드 모드: 무조건 1개 당첨 (확률 시스템 사용 안함)
                 const winningCardIndex = Math.floor(Math.random() * cardCount);
 
-                // 4. 카드 배열 생성
+                // 카드 배열 생성
                 const cards: CardData[] = [];
                 for (let i = 0; i < cardCount; i++) {
                     cards.push({
                         id: i,
-                        grade: i === winningCardIndex ? winningGrade : 'lose',
                         isWinning: i === winningCardIndex,
+                        bagelCount: i === winningCardIndex ? bagelCount : 0,
                     });
                 }
 
@@ -213,7 +208,7 @@ export const useGameStore = create<GameState>()(
                         cards,
                         selectedCardIndex: null,
                         winningCardIndex,
-                        winningGrade,
+                        bagelCount,
                         revealedCards: [],
                         gamePhase: 'selecting',
                     }
@@ -257,26 +252,16 @@ export const useGameStore = create<GameState>()(
             },
 
             completeCardGame: () => {
-                const { cardGame, quota, history } = get();
+                const { cardGame, history } = get();
                 if (!cardGame) {
                     throw new Error('Card game not initialized');
                 }
 
-                const { winningGrade } = cardGame;
+                const { selectedCardIndex, cards, bagelCount } = cardGame;
+                const selectedCard = cards[selectedCardIndex!];
+                const isWin = selectedCard?.isWinning || false;
 
-                // 1. 쿼터 업데이트
-                if (winningGrade !== 'lose') {
-                    set((state) => ({
-                        quota: {
-                            ...state.quota,
-                            first: winningGrade === '1st' ? state.quota.first - 1 : state.quota.first,
-                            second: winningGrade === '2nd' ? state.quota.second - 1 : state.quota.second,
-                            third: winningGrade === '3rd' ? state.quota.third - 1 : state.quota.third,
-                        }
-                    }));
-                }
-
-                // 2. 기록 생성
+                // 기록 생성 (카드 모드용 - 당첨/꽝만 구분)
                 const today = new Date();
                 const dateStr = today.toISOString().slice(0, 10).replace(/-/g, '');
                 const dailyCount = history.filter(h => {
@@ -288,7 +273,7 @@ export const useGameStore = create<GameState>()(
 
                 const newResult: DrawResult = {
                     id: Math.random().toString(36).substr(2, 9),
-                    grade: winningGrade,
+                    grade: isWin ? 'card_win' as PrizeGrade : 'lose',
                     timestamp: Date.now(),
                     isClaimed: false,
                     drawNumber,

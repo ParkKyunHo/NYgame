@@ -1,24 +1,23 @@
-import React, { useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, Animated, TouchableOpacity, Platform } from 'react-native';
+import React, { useRef, useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Animated, TouchableOpacity, Platform, Pressable } from 'react-native';
 import { colors } from '../../constants/colors';
 import { useResponsive } from '../../hooks/useResponsive';
-import { PrizeGrade } from '../../lib/engine';
 
 interface PixelCardProps {
-    grade: PrizeGrade;
     isRevealed: boolean;
     isSelected: boolean;
     isWinning: boolean;
+    bagelCount: number;
     onPress: () => void;
     disabled: boolean;
     index: number;
 }
 
 export const PixelCard: React.FC<PixelCardProps> = ({
-    grade,
     isRevealed,
     isSelected,
     isWinning,
+    bagelCount,
     onPress,
     disabled,
 }) => {
@@ -26,6 +25,8 @@ export const PixelCard: React.FC<PixelCardProps> = ({
     const flipAnim = useRef(new Animated.Value(0)).current;
     const scaleAnim = useRef(new Animated.Value(1)).current;
     const glowAnim = useRef(new Animated.Value(0)).current;
+    const hoverAnim = useRef(new Animated.Value(0)).current;
+    const [isHovered, setIsHovered] = useState(false);
 
     // 카드 뒤집기 애니메이션
     useEffect(() => {
@@ -64,7 +65,7 @@ export const PixelCard: React.FC<PixelCardProps> = ({
 
     // 당첨 카드 글로우 애니메이션
     useEffect(() => {
-        if (isRevealed && isWinning && grade !== 'lose') {
+        if (isRevealed && isWinning) {
             const glowAnimation = Animated.loop(
                 Animated.sequence([
                     Animated.timing(glowAnim, {
@@ -82,33 +83,39 @@ export const PixelCard: React.FC<PixelCardProps> = ({
             glowAnimation.start();
             return () => glowAnimation.stop();
         }
-    }, [isRevealed, isWinning, grade, glowAnim]);
+    }, [isRevealed, isWinning, glowAnim]);
 
-    const getGradeColor = () => {
-        switch (grade) {
-            case '1st': return colors.grade.first;
-            case '2nd': return colors.grade.second;
-            case '3rd': return colors.grade.third;
-            default: return colors.grade.lose;
+    // 마우스 호버 애니메이션
+    useEffect(() => {
+        if (!disabled && !isRevealed) {
+            Animated.timing(hoverAnim, {
+                toValue: isHovered ? 1 : 0,
+                duration: 150,
+                useNativeDriver: Platform.OS !== 'web',
+            }).start();
         }
+    }, [isHovered, disabled, isRevealed, hoverAnim]);
+
+    const hoverTranslateY = hoverAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: [0, -8],
+    });
+
+    const hoverScale = hoverAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: [1, 1.05],
+    });
+
+    const getCardColor = () => {
+        return isWinning ? colors.grade.first : colors.grade.lose;
     };
 
-    const getGradeEmoji = () => {
-        switch (grade) {
-            case '1st': return '1';
-            case '2nd': return '2';
-            case '3rd': return '3';
-            default: return 'X';
-        }
+    const getCardEmoji = () => {
+        return isWinning ? '🥯' : 'X';
     };
 
-    const getGradeLabel = () => {
-        switch (grade) {
-            case '1st': return '1등';
-            case '2nd': return '2등';
-            case '3rd': return '3등';
-            default: return '꽝';
-        }
+    const getCardLabel = () => {
+        return isWinning ? `${bagelCount}개 당첨!` : '꽝';
     };
 
     const cardWidth = s(80);
@@ -136,14 +143,18 @@ export const PixelCard: React.FC<PixelCardProps> = ({
             {
                 width: cardWidth,
                 height: cardHeight,
-                transform: [{ scale: scaleAnim }],
+                transform: [
+                    { scale: Animated.multiply(scaleAnim, hoverScale) },
+                    { translateY: hoverTranslateY },
+                ],
             }
         ]}>
-            <TouchableOpacity
+            <Pressable
                 onPress={onPress}
                 disabled={disabled}
-                activeOpacity={0.8}
                 style={styles.touchable}
+                onHoverIn={() => setIsHovered(true)}
+                onHoverOut={() => setIsHovered(false)}
             >
                 {/* 카드 뒷면 */}
                 <Animated.View
@@ -157,11 +168,12 @@ export const PixelCard: React.FC<PixelCardProps> = ({
                             transform: [{ rotateY: frontRotateY }],
                         },
                         isSelected && !isRevealed && styles.cardSelected,
+                        isHovered && !disabled && !isRevealed && styles.cardHovered,
                     ]}
                 >
                     <View style={[styles.cardBackInner, { borderRadius: s(4) }]}>
                         <Text style={[styles.cardBackQuestion, { fontSize: fs(36) }]}>?</Text>
-                        <Text style={[styles.cardBackEmoji, { fontSize: fs(24) }]}>O</Text>
+                        <Text style={[styles.cardBackEmoji, { fontSize: fs(24) }]}>🥯</Text>
                     </View>
                 </Animated.View>
 
@@ -174,18 +186,18 @@ export const PixelCard: React.FC<PixelCardProps> = ({
                             width: cardWidth,
                             height: cardHeight,
                             borderWidth: s(4),
-                            borderColor: getGradeColor(),
+                            borderColor: getCardColor(),
                             transform: [{ rotateY: backRotateY }],
                         },
                     ]}
                 >
                     {/* 당첨 카드 글로우 효과 */}
-                    {isWinning && grade !== 'lose' && (
+                    {isWinning && (
                         <Animated.View
                             style={[
                                 styles.glowEffect,
                                 {
-                                    backgroundColor: getGradeColor(),
+                                    backgroundColor: getCardColor(),
                                     opacity: glowOpacity,
                                 }
                             ]}
@@ -195,7 +207,7 @@ export const PixelCard: React.FC<PixelCardProps> = ({
                     <View style={[
                         styles.cardFrontInner,
                         {
-                            backgroundColor: grade !== 'lose' ? getGradeColor() : colors.pixel.cream,
+                            backgroundColor: isWinning ? getCardColor() : colors.pixel.cream,
                             borderRadius: s(4),
                         }
                     ]}>
@@ -205,31 +217,31 @@ export const PixelCard: React.FC<PixelCardProps> = ({
                                 width: s(50),
                                 height: s(50),
                                 borderRadius: s(25),
-                                backgroundColor: grade !== 'lose' ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.1)',
+                                backgroundColor: isWinning ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.1)',
                             }
                         ]}>
                             <Text style={[
                                 styles.gradeEmoji,
                                 {
                                     fontSize: fs(28),
-                                    color: grade !== 'lose' ? colors.pixel.darkBrown : colors.grade.lose,
+                                    color: isWinning ? colors.pixel.darkBrown : colors.grade.lose,
                                 }
                             ]}>
-                                {getGradeEmoji()}
+                                {getCardEmoji()}
                             </Text>
                         </View>
                         <Text style={[
                             styles.gradeText,
                             {
-                                fontSize: fs(14),
-                                color: grade !== 'lose' ? colors.pixel.darkBrown : colors.grade.lose,
+                                fontSize: fs(12),
+                                color: isWinning ? colors.pixel.darkBrown : colors.grade.lose,
                             }
                         ]}>
-                            {getGradeLabel()}
+                            {getCardLabel()}
                         </Text>
                     </View>
                 </Animated.View>
-            </TouchableOpacity>
+            </Pressable>
         </Animated.View>
     );
 };
@@ -290,6 +302,11 @@ const styles = StyleSheet.create({
         borderColor: colors.pixel.warmOrange,
         shadowColor: colors.pixel.warmOrange,
         shadowOpacity: 0.8,
+    },
+    cardHovered: {
+        borderColor: colors.pixel.softGold,
+        shadowColor: colors.pixel.softGold,
+        shadowOpacity: 0.6,
     },
     gradeCircle: {
         alignItems: 'center',
